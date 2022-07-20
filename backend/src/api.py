@@ -17,7 +17,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-db_drop_and_create_all()
+#db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -36,7 +36,7 @@ def get_drinks():
     #need to create a for loop to update all the drinks
     return jsonify({
         'success':True,
-        'drinks': drinks[0].id
+        'drinks': [drink.short() for drink in drinks]
     })
 
 '''
