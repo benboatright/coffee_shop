@@ -28,7 +28,16 @@ db_drop_and_create_all()
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-
+# 7/20/22 # followed documentation to get started #https://flask.palletsprojects.com/en/2.1.x/quickstart/
+# 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to get the drinks to display
+@app.route('/drinks',methods=['GET'])
+def get_drinks():
+    drinks = Drink.query.all()
+    #need to create a for loop to update all the drinks
+    return jsonify({
+        'success':True,
+        'drinks': drinks[0].id
+    })
 
 '''
 @TODO implement endpoint
@@ -80,8 +89,6 @@ db_drop_and_create_all()
 '''
 Example error handling for unprocessable entity
 '''
-
-
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
