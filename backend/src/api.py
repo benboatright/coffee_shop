@@ -126,7 +126,7 @@ def not_found(error):
     }), 404
 
 '''
-@TODO implement error handler for 404
+@COMPLETE implement error handler for 404
     error handler should conform to general task above
 '''
 
