@@ -30,8 +30,15 @@ class AuthError(Exception):
         it should raise an AuthError if the header is malformed
     return the token part of the header
 '''
+# 7/26/22 #relied on the video/code from the videos #https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/d266ef96-8da1-4dc0-b5b1-d6c3e4af9923/concepts/c9957a38-a6eb-40e0-addc-c794f2023ffb
 def get_token_auth_header():
-   raise Exception('Not Implemented')
+    request_header = request.headers['Authorization']
+    if request_header is None:
+        raise Exception('Not Implemented')
+    else:
+        bearer = request_header.split(' ')[0]
+        token = request_header.split(' ')[1]
+    return token
 
 '''
 @TODO implement check_permissions(permission, payload) method
