@@ -19,19 +19,24 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-#db_drop_and_create_all()
+# db_drop_and_create_all()
 
 # ROUTES
 '''
 @COMPLETE implement endpoint
     GET /drinks
-        it should be a public endpoint
-        it should contain only the drink.short() data representation
-    returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
-        or appropriate status code indicating reason for failure
+    it should be a public endpoint
+    it should contain only the drink.short() data representation
+    returns status code 200 and json {"success": True, "drinks": drinks}
+    where drinks is the list of drinks
+    or appropriate status code indicating reason for failure
 '''
-# 7/20/22 #followed documentation to get started #https://flask.palletsprojects.com/en/2.1.x/quickstart/
-# 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to get the drinks to display
+# 7/20/22 #followed documentation to get started
+# #https://flask.palletsprojects.com/en/2.1.x/quickstart/
+# 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to
+# get the drinks to display
+
+
 @app.route('/drinks', methods=['GET'])
 def get_drinks():
     # query all the drinks in the database
@@ -40,25 +45,29 @@ def get_drinks():
     if drinks is not None:
         # return True for success and the short list of all the drinks
         return jsonify({
-            'success':True,
+            'success': True,
             'drinks': [drink.short() for drink in drinks]
         })
     # if there are no drinks, abort 404
     else:
         abort(404)
 
+
 '''
 @COMPLETE implement endpoint
     GET /drinks-detail
-        *it should require the 'get:drinks-detail' permission*
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
-        or appropriate status code indicating reason for failure
+    *it should require the 'get:drinks-detail' permission*
+    it should contain the drink.long() data representation
+    returns status code 200 and json
+    {"success": True, "drinks": drinks} where drinks is the list of drinks
+    or appropriate status code indicating reason for failure
 '''
-# 7/31/22 #used the video and code from the 
+# 7/31/22 #used the video and code from the
 # '4. Using RBAC in Flask' lesson to add the @requires_auth
 # #https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/1e1c8e9d-61af-4a0a-b7d5-87e5becf9be7/concepts/b4d79d5c-3d79-43e6-93ca-0d750043a373
-@app.route('/drinks-detail',methods=['GET'])
+
+
+@app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 def get_drinks_detail(token):
     # query all the drinks in the databse
@@ -67,42 +76,53 @@ def get_drinks_detail(token):
     if drinks is not None:
         # retrun True for success and the long list of all the drinks
         return jsonify({
-            'success':True,
+            'success': True,
             'drinks': [drink.long() for drink in drinks]
         })
     # if no drnks, abort 404
     else:
         abort(404)
 
+
 '''
 @COMPLETE implement endpoint
     POST /drinks
-        it should create a new row in the drinks table
-        it should require the 'post:drinks' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
-        or appropriate status code indicating reason for failure
+    it should create a new row in the drinks table
+    it should require the 'post:drinks' permission
+    it should contain the drink.long() data representation
+    returns status code 200 and json
+    {"success": True, "drinks": drink} where drink an array
+    containing only the newly created drink
+    or appropriate status code indicating reason for failure
 '''
-# 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to 
+# 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to
 # remind myself how to get the request data
-@app.route('/drinks',methods=['POST'])
+
+
+@app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def post_drinks(token):
     # get the request
-    body = json.loads(request.data.decode('utf-8')) #7/31/22 #i tried using 'request.get_json()' but kept getting error. Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
+    # 7/31/22 #i tried using 'request.get_json()' but kept getting error.
+    # Vinicius recommedned this code to another user
+    # #https://knowledge.udacity.com/questions/510654
+    body = json.loads(request.data.decode('utf-8'))
     # check if body is none
     if body is None:
         abort(404)
     else:
         # retreive the title and the recipe
-        new_title = body.get("title") 
-        new_recipe = json.dumps(body.get("recipe")) #7/31/22 #i tried using body.get("recipe") but kept getting error. Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
+        new_title = body.get("title")
+        # 7/31/22 #i tried using body.get("recipe") but kept getting error.
+        # Vinicius recommedned this code to another user
+        # #https://knowledge.udacity.com/questions/510654
+        new_recipe = json.dumps(body.get("recipe"))
         # create a new instance
-        drink = Drink(title=new_title,recipe=new_recipe)
+        drink = Drink(title=new_title, recipe=new_recipe)
         # insert the new instance
         drink.insert()
         return jsonify({
-            'success':True,
+            'success': True,
             'drink': drink.long()
         })
 
@@ -110,17 +130,21 @@ def post_drinks(token):
 '''
 @COMPLETE implement endpoint
     PATCH /drinks/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should update the corresponding row for <id>
-        it should require the 'patch:drinks' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
-        or appropriate status code indicating reason for failure
+    where <id> is the existing model id
+    it should respond with a 404 error if <id> is not found
+    it should update the corresponding row for <id>
+    it should require the 'patch:drinks' permission
+    it should contain the drink.long() data representation
+    returns status code 200 and json
+    {"success": True, "drinks": drink} where drink
+    an array containing only the updated drink
+    or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks/<id>',methods=['PATCH'])
+
+
+@app.route('/drinks/<id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def patch_drinks(token,id):
+def patch_drinks(token, id):
     # retreive the drink from the table
     drink = Drink.query.get(id)
     # retreive the body from the request
@@ -130,9 +154,9 @@ def patch_drinks(token,id):
     if drink is None or body is None:
         abort(404)
     else:
-        #get the new title
+        # get the new title
         new_title = body.get("title")
-        #get the new recipe
+        # get the new recipe
         new_recipe = json.dumps(body.get("recipe"))
         # update the title
         drink.title = new_title
@@ -142,27 +166,28 @@ def patch_drinks(token,id):
         drink.update()
         # return the success
         return jsonify({
-            'success':True,
+            'success': True,
             'drink': drink.long()
         })
-
-
-
 
 
 '''
 @COMPLETE implement endpoint
     DELETE /drinks/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should delete the corresponding row for <id>
-        it should require the 'delete:drinks' permission
-    returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
-        or appropriate status code indicating reason for failure
+    where <id> is the existing model id
+    it should respond with a 404 error if <id> is not found
+    it should delete the corresponding row for <id>
+    it should require the 'delete:drinks' permission
+    returns status code 200 and json
+    {"success": True, "delete": id} where id is
+    the id of the deleted record
+    or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks/<id>',methods=['DELETE'])
+
+
+@app.route('/drinks/<id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def delete_drinks(token,id):
+def delete_drinks(token, id):
     # identify the drink based on the id in the route
     drink = Drink.query.get(id)
     # if the drink is not in the database, abort 404
@@ -173,14 +198,17 @@ def delete_drinks(token,id):
         drink.delete()
         # return the following
         return jsonify({
-            'success':True,
+            'success': True,
             'delete': id
         })
+
 
 # Error Handling
 '''
 Example error handling for unprocessable entity
 '''
+
+
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
@@ -200,13 +228,16 @@ def unprocessable(error):
                     }), 404
 '''
 # followed the code above
+
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
-        'success':False,
-        'error':404,
+        'success': False,
+        'error': 404,
         'message': 'resource not found'
     }), 404
+
 
 '''
 @COMPLETE implement error handler for 404
