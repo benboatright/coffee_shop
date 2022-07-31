@@ -36,11 +36,16 @@ CORS(app)
 def get_drinks():
     # query all the drinks in the database
     drinks = Drink.query.all()
-    # return True for success and the short list of all the drinks
-    return jsonify({
-        'success':True,
-        'drinks': [drink.short() for drink in drinks]
-    })
+    # check if there are drinks
+    if drinks is not None:
+        # return True for success and the short list of all the drinks
+        return jsonify({
+            'success':True,
+            'drinks': [drink.short() for drink in drinks]
+        })
+    # if there are no drinks, abort 404
+    else:
+        abort(404)
 
 '''
 @COMPLETE implement endpoint
@@ -58,11 +63,16 @@ def get_drinks():
 def get_drinks_detail(token):
     # query all the drinks in the databse
     drinks = Drink.query.all()
-    # retrun True for success and the long list of all the drinks
-    return jsonify({
-        'success':True,
-        'drinks': [drink.long() for drink in drinks]
-    })
+    # check to see if there are drinks
+    if drinks is not None:
+        # retrun True for success and the long list of all the drinks
+        return jsonify({
+            'success':True,
+            'drinks': [drink.long() for drink in drinks]
+        })
+    # if no drnks, abort 404
+    else:
+        abort(404)
 
 '''
 @COMPLETE implement endpoint
@@ -80,17 +90,21 @@ def get_drinks_detail(token):
 def post_drinks(token):
     # get the request
     body = json.loads(request.data.decode('utf-8')) #7/31/22 #i tried using 'request.get_json()' but kept getting error. Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
-    # retreive the title and the recipe
-    new_title = body.get("title") 
-    new_recipe = json.dumps(body.get("recipe")) #7/31/22 #i tried using body.get("recipe") but kept getting error. Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
-    # create a new instance
-    drink = Drink(title=new_title,recipe=new_recipe)
-    # insert the new instance
-    drink.insert()
-    return jsonify({
-        'success':True,
-        'drink': drink.long()
-    })
+    # check if body is none
+    if body is None:
+        abort(404)
+    else:
+        # retreive the title and the recipe
+        new_title = body.get("title") 
+        new_recipe = json.dumps(body.get("recipe")) #7/31/22 #i tried using body.get("recipe") but kept getting error. Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
+        # create a new instance
+        drink = Drink(title=new_title,recipe=new_recipe)
+        # insert the new instance
+        drink.insert()
+        return jsonify({
+            'success':True,
+            'drink': drink.long()
+        })
 
 
 '''
@@ -104,6 +118,36 @@ def post_drinks(token):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks/<id>',methods=['PATCH'])
+@requires_auth('patch:drinks')
+def patch_drinks(token,id):
+    # retreive the drink from the table
+    drink = Drink.query.get(id)
+    # retreive the body from the request
+    body = request.get_json()
+    # check to make sure the drink id is in the table
+    # and the body has content
+    if drink is None or body is None:
+        abort(404)
+    else:
+        #get the new title
+        new_title = body.get("title")
+        #get the new recipe
+        new_recipe = json.dumps(body.get("recipe"))
+        # update the title
+        drink.title = new_title
+        # update the recipe
+        drink.recipe = new_recipe
+        # make the update
+        drink.update()
+        # return the success
+        return jsonify({
+            'success':True,
+            'drink': drink.long()
+        })
+
+
+
 
 
 '''
