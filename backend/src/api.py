@@ -19,7 +19,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-#db_drop_and_create_all()
+db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -65,7 +65,7 @@ def get_drinks_detail(token):
     })
 
 '''
-@TODO implement endpoint
+@COMPLETE implement endpoint
     POST /drinks
         it should create a new row in the drinks table
         it should require the 'post:drinks' permission
@@ -116,7 +116,22 @@ def post_drinks(token):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks/<id>',methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drinks(token,id):
+    # identify the drink based on the id in the route
+    drink = Drink.query.get(id)
+    # if the drink is not in the database, abort 404
+    if drink is None:
+        abort(404)
+    else:
+        # delete the drink from the database table
+        drink.delete()
+        # return the following
+        return jsonify({
+            'success':True,
+            'delete': id
+        })
 
 # Error Handling
 '''
