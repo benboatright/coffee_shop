@@ -1,4 +1,6 @@
+from crypt import methods
 import os
+from urllib import response
 from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
 import json
@@ -32,9 +34,9 @@ CORS(app)
 # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to get the drinks to display
 @app.route('/drinks', methods=['GET'])
 def get_drinks():
-    #query all the drinks in the database
+    # query all the drinks in the database
     drinks = Drink.query.all()
-    #return True for success and the short list of all the drinks
+    # return True for success and the short list of all the drinks
     return jsonify({
         'success':True,
         'drinks': [drink.short() for drink in drinks]
@@ -54,9 +56,9 @@ def get_drinks():
 @app.route('/drinks-detail',methods=['GET'])
 @requires_auth('get:drinks-detail')
 def get_drinks_detail(token):
-    #query all the drinks in the databse
+    # query all the drinks in the databse
     drinks = Drink.query.all()
-    #retrun True for success and the long list of all the drinks
+    # retrun True for success and the long list of all the drinks
     return jsonify({
         'success':True,
         'drinks': [drink.long() for drink in drinks]
@@ -71,6 +73,24 @@ def get_drinks_detail(token):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+# 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to 
+# remind myself how to get the request data
+@app.route('/drinks',methods=['POST'])
+@requires_auth('post:drinks')
+def post_drinks(token):
+    # get the request
+    body = json.loads(request.data.decode('utf-8')) #7/31/22 #i tried using 'request.get_json()' but kept getting error. Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
+    # retreive the title and the recipe
+    new_title = body.get("title") 
+    new_recipe = json.dumps(body.get("recipe")) #7/31/22 #i tried using body.get("recipe") but kept getting error. Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
+    # create a new instance
+    drink = Drink(title=new_title,recipe=new_recipe)
+    # insert the new instance
+    drink.insert()
+    return jsonify({
+        'success':True,
+        'drink': drink.long()
+    })
 
 
 '''
