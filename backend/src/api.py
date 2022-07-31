@@ -41,15 +41,19 @@ def get_drinks():
     })
 
 '''
-@TODO implement endpoint
+@COMPLETE implement endpoint
     GET /drinks-detail
         *it should require the 'get:drinks-detail' permission*
         it should contain the drink.long() data representation
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+# 7/31/22 #used the video and code from the 
+# '4. Using RBAC in Flask' lesson to add the @requires_auth
+# #https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/1e1c8e9d-61af-4a0a-b7d5-87e5becf9be7/concepts/b4d79d5c-3d79-43e6-93ca-0d750043a373
 @app.route('/drinks-detail',methods=['GET'])
-def get_drinks_detail():
+@requires_auth('get:drinks-detail')
+def get_drinks_detail(token):
     #query all the drinks in the databse
     drinks = Drink.query.all()
     #retrun True for success and the long list of all the drinks
