@@ -32,7 +32,10 @@ class AuthError(Exception):
 '''
 # 7/26/22 #relied on the video/code from the videos #https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/d266ef96-8da1-4dc0-b5b1-d6c3e4af9923/concepts/c9957a38-a6eb-40e0-addc-c794f2023ffb
 def get_token_auth_header():
+    # assign the bearer authorization header 
     request_header = request.headers['Authorization']
+    # if the header is empty, raise the exception
+    # else split the string into bearer and toke vars
     if request_header is None:
         raise Exception('Not Implemented')
     else:
@@ -67,8 +70,39 @@ def check_permissions(permission, payload):
 
     !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
 '''
+# 7/31/22 #used the code and graffiti voice overs from the 
+# '10. Practice - Validating Auth0 Tokens' lesson 
 def verify_decode_jwt(token):
-    raise Exception('Not Implemented')
+    # load the jwks.json url
+    url = urlopen(f'{AUTH0_DOMAIN}+"/.wll-known/jwks.json"')
+    # convert the jwks.json response to json
+    jwks = json.loads(url.read())
+
+    # get the jwt token that needs to be verified
+    header = jwt.get_unverified_header(token)
+
+    # for loop to build the rsa key
+    for val in jwks:
+        rsa = {}
+        if val['kid'] == header['kid']:
+            rsa = {
+                'kty': val['kty'],
+                'kid': val['kid'],
+                'use': val['use'],
+                'n': val['n'],
+                'e': val['e'] 
+            }
+    # use the token, key, algorithm, audience, and issuer to build the payload
+    payload = jwt.decode(token=token,
+                         key=rsa,
+                         algorithms=ALGORITHMS,
+                         audience=API_AUDIENCE,
+                         issuer="https//:"+AUTH0_DOMAIN)
+
+    if payload is None:
+        raise Exception('Not Implemented')
+    else:
+        return payload
 
 '''
 @TODO implement @requires_auth(permission) decorator method
