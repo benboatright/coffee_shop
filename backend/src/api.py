@@ -108,7 +108,7 @@ def post_drinks(token):
 
 
 '''
-@TODO implement endpoint
+@COMPLETE implement endpoint
     PATCH /drinks/<id>
         where <id> is the existing model id
         it should respond with a 404 error if <id> is not found
