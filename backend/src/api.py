@@ -33,8 +33,6 @@ CORS(app)
 '''
 # 7/20/22 #followed documentation to get started
 # #https://flask.palletsprojects.com/en/2.1.x/quickstart/
-# 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to
-# get the drinks to display
 
 
 @app.route('/drinks', methods=['GET'])
@@ -46,7 +44,7 @@ def get_drinks():
         # return True for success and the short list of all the drinks
         return jsonify({
             'success': True,
-            'drinks': [drink.short() for drink in drinks]
+            'drinks': [drink.short() for drink in drinks] # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to get the drinks to display
         })
     # if there are no drinks, abort 404
     else:
@@ -95,25 +93,20 @@ def get_drinks_detail(token):
     containing only the newly created drink
     or appropriate status code indicating reason for failure
 '''
-# 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to
-# remind myself how to get the request data
 
 
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def post_drinks(token):
     # get the request
-    # 7/31/22 #i tried using 'request.get_json()' but kept getting error.
-    # Vinicius recommedned this code to another user
-    # #https://knowledge.udacity.com/questions/510654
-    body = json.loads(request.data.decode('utf-8'))
+    body = request.get_json() #8/1/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to remind myself how to get the request data
     # check if body is none
     if body is None:
         abort(404)
     else:
         # retreive the title and the recipe
         new_title = body.get("title")
-        # 7/31/22 #i tried using body.get("recipe") but kept getting error.
+        # 7/31/22 #i tried using body.get(" ") method from Caryn's __init__.py file in 6_Final_Starter folder but kept getting error.
         # Vinicius recommedned this code to another user
         # #https://knowledge.udacity.com/questions/510654
         new_recipe = json.dumps(body.get("recipe"))
