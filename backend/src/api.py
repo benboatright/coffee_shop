@@ -33,6 +33,8 @@ CORS(app)
 '''
 # 7/20/22 #followed documentation to get started
 # #https://flask.palletsprojects.com/en/2.1.x/quickstart/
+# 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder 
+# from 'API Development and Documentation' module 
 
 
 @app.route('/drinks', methods=['GET'])
@@ -61,9 +63,8 @@ def get_drinks():
     or appropriate status code indicating reason for failure
 '''
 # 7/31/22 #used the video and code from the
-# '4. Using RBAC in Flask' lesson to add the @requires_auth
+# '4. Using RBAC in Flask' lesson to add the @requires_auth wrapper
 # #https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/1e1c8e9d-61af-4a0a-b7d5-87e5becf9be7/concepts/b4d79d5c-3d79-43e6-93ca-0d750043a373
-
 
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
@@ -75,7 +76,7 @@ def get_drinks_detail(token):
         # retrun True for success and the long list of all the drinks
         return jsonify({
             'success': True,
-            'drinks': [drink.long() for drink in drinks]
+            'drinks': [drink.long() for drink in drinks] # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the drinks to display using list comprehension
         })
     # if no drnks, abort 404
     else:
@@ -94,22 +95,21 @@ def get_drinks_detail(token):
     or appropriate status code indicating reason for failure
 '''
 
-
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def post_drinks(token):
     # get the request
-    body = request.get_json() #8/1/22 #followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to remind myself how to get the request data
+    request_body = request.get_json() # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to remind myself how to get the request data
     # check if body is none
-    if body is None:
+    if request_body is None:
         abort(404)
     else:
         # retreive the title and the recipe
-        new_title = body.get("title")
+        new_title = request_body.get("title") # 7/31/22 # followed Caryn's init__.py file in 6_Final_Starter folder from 'API Development and Documentaion' module to extract the title from the request body
         # 7/31/22 #i tried using body.get(" ") method from Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module but kept getting error.
         # Vinicius recommedned this code to another user
         # #https://knowledge.udacity.com/questions/510654
-        new_recipe = json.dumps(body.get("recipe"))
+        new_recipe = json.dumps(request_body.get("recipe"))
         # create a new instance
         drink = Drink(title=new_title, recipe=new_recipe)
         # insert the new instance
@@ -141,16 +141,16 @@ def patch_drinks(token, id):
     # retreive the drink from the table
     drink = Drink.query.get(id)
     # retreive the body from the request
-    body = request.get_json()
+    request_body = request.get_json() # 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the request body
     # check to make sure the drink id is in the table
     # and the body has content
-    if drink is None or body is None:
+    if drink is None or request_body is None:
         abort(404)
     else:
         # get the new title
-        new_title = body.get("title")
+        new_title = request_body.get("title") # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the title from the body
         # get the new recipe
-        new_recipe = json.dumps(body.get("recipe"))
+        new_recipe = json.dumps(request_body.get("recipe")) # 7/31/22 # Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
         # update the title
         drink.title = new_title
         # update the recipe
