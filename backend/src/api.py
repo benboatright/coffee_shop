@@ -44,7 +44,7 @@ def get_drinks():
         # return True for success and the short list of all the drinks
         return jsonify({
             'success': True,
-            'drinks': [drink.short() for drink in drinks] # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to get the drinks to display
+            'drinks': [drink.short() for drink in drinks] # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the drinks to display
         })
     # if there are no drinks, abort 404
     else:
@@ -99,14 +99,14 @@ def get_drinks_detail(token):
 @requires_auth('post:drinks')
 def post_drinks(token):
     # get the request
-    body = request.get_json() #8/1/22 #followed Caryn's __init__.py file in 6_Final_Starter folder to remind myself how to get the request data
+    body = request.get_json() #8/1/22 #followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to remind myself how to get the request data
     # check if body is none
     if body is None:
         abort(404)
     else:
         # retreive the title and the recipe
         new_title = body.get("title")
-        # 7/31/22 #i tried using body.get(" ") method from Caryn's __init__.py file in 6_Final_Starter folder but kept getting error.
+        # 7/31/22 #i tried using body.get(" ") method from Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module but kept getting error.
         # Vinicius recommedned this code to another user
         # #https://knowledge.udacity.com/questions/510654
         new_recipe = json.dumps(body.get("recipe"))
