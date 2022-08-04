@@ -124,7 +124,7 @@ def verify_decode_jwt(token):
                          issuer="https://" + AUTH0_DOMAIN + "/")
 
     if payload is None:
-        abort(401)
+        abort(403)
     else:
         return payload
 
