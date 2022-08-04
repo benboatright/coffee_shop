@@ -33,8 +33,8 @@ db_drop_and_create_all()
 '''
 # 7/20/22 #followed documentation to get started
 # #https://flask.palletsprojects.com/en/2.1.x/quickstart/
-# 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder 
-# from 'API Development and Documentation' module 
+# 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder
+# from 'API Development and Documentation' module
 
 
 @app.route('/drinks', methods=['GET'])
@@ -46,7 +46,10 @@ def get_drinks():
         # return True for success and the short list of all the drinks
         return jsonify({
             'success': True,
-            'drinks': [drink.short() for drink in drinks] # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the drinks to display
+            # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter
+            # folder from 'API Development and Documentation' module to get the
+            # drinks to display
+            'drinks': [drink.short() for drink in drinks]
         })
     # if there are no drinks, abort 404
     else:
@@ -66,6 +69,7 @@ def get_drinks():
 # '4. Using RBAC in Flask' lesson to add the @requires_auth wrapper
 # #https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/1e1c8e9d-61af-4a0a-b7d5-87e5becf9be7/concepts/b4d79d5c-3d79-43e6-93ca-0d750043a373
 
+
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 def get_drinks_detail(token):
@@ -76,7 +80,10 @@ def get_drinks_detail(token):
         # retrun True for success and the long list of all the drinks
         return jsonify({
             'success': True,
-            'drinks': [drink.long() for drink in drinks] # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the drinks to display using list comprehension
+            # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter
+            # folder from 'API Development and Documentation' module to get the
+            # drinks to display using list comprehension
+            'drinks': [drink.long() for drink in drinks]
         })
     # if no drnks, abort 404
     else:
@@ -95,19 +102,28 @@ def get_drinks_detail(token):
     or appropriate status code indicating reason for failure
 '''
 
+
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def post_drinks(token):
     # get the request
-    request_body = request.get_json() # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to remind myself how to get the request data
+    # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder
+    # from 'API Development and Documentation' module to remind myself how to
+    # get the request data
+    request_body = request.get_json()
     # check if body is none
     if request_body is None or request_body == '':
         abort(404)
     else:
         # retreive the title and the recipe
-        new_title = request_body.get("title") # 7/31/22 # followed Caryn's init__.py file in 6_Final_Starter folder from 'API Development and Documentaion' module to extract the title from the request body
-        # 7/31/22 #i tried using body.get(" ") method from Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module but kept getting error.
-        # Vinicius recommedned this code to another user
+        # 7/31/22 # followed Caryn's init__.py file in 6_Final_Starter folder
+        # from 'API Development and Documentaion' module to extract the title
+        # from the request body
+        new_title = request_body.get("title")
+        # 7/31/22 ##I tried using body.get(" ") method from Caryn's
+        #  __init__.py file in 6_Final_Starter folder from
+        # 'API Development and Documentation' module but kept
+        # getting error. Vinicius recommedned this code to another user
         # #https://knowledge.udacity.com/questions/510654
         new_recipe = json.dumps(request_body.get("recipe"))
         # create a new instance
@@ -141,16 +157,23 @@ def patch_drinks(token, id):
     # retreive the drink from the table
     drink = Drink.query.get(id)
     # retreive the body from the request
-    request_body = request.get_json() # 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the request body
+    # 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder
+    # from 'API Development and Documentation' module to get the request body
+    request_body = request.get_json()
     # check to make sure the drink id is in the table
     # and the body has content
     if drink is None:
         abort(404)
     if request_body is not None:
         # get the new title
-        new_title = request_body.get("title") # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the title from the body
+        # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder
+        # from 'API Development and Documentation' module to get the title from
+        # the body
+        new_title = request_body.get("title")
         # get the new recipe
-        new_recipe = json.dumps(request_body.get("recipe")) # 7/31/22 # Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
+        # 7/31/22 # Vinicius recommedned this code to another user
+        # #https://knowledge.udacity.com/questions/510654
+        new_recipe = json.dumps(request_body.get("recipe"))
         # update the title
         if new_title is not None:
             drink.title = new_title
@@ -235,6 +258,7 @@ def not_found(error):
         'message': 'resource not found'
     }), 404
 
+
 @app.errorhandler(401)
 def no_credentials(error):
     return jsonify({
@@ -243,6 +267,7 @@ def no_credentials(error):
         'message': "no credentials"
     }), 401
 
+
 @app.errorhandler(403)
 def no_permission(error):
     return jsonify({
@@ -250,6 +275,8 @@ def no_permission(error):
         'error': 403,
         'message': 'permission not included or not valid'
     }), 403
+
+
 '''
 @COMPLETE implement error handler for 404
     error handler should conform to general task above
