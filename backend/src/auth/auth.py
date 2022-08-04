@@ -1,5 +1,5 @@
 import json
-from flask import request, _request_ctx_stack
+from flask import request, _request_ctx_stack, abort
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
@@ -37,13 +37,14 @@ class AuthError(Exception):
 
 
 def get_token_auth_header():
-    # assign the bearer authorization header
-    request_header = request.headers['Authorization']
-    # if the header is empty, raise the exception
-    # else split the string into bearer and toke vars
-    if request_header is None:
-        raise AuthError('No Credentials',401)
+    # If the 'Authorization' not in the request, abort 401
+    # Video from '15. Practice - Applying Skills in Flask' min 3:35
+    # https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/d266ef96-8da1-4dc0-b5b1-d6c3e4af9923/concepts/bb611ecd-2693-4556-a970-48128dba5c24
+    if 'Authorization' not in request.headers:
+        abort(401)
     else:
+        # assign the bearer authorization header
+        request_header = request.headers['Authorization']
         bearer = request_header.split(' ')[0]
         token = request_header.split(' ')[1]
     return token
@@ -66,15 +67,18 @@ def get_token_auth_header():
 
 
 def check_permissions(permission, payload):
-    # check if 'permissions in payload
-    if 'permissions' not in payload:
-        raise AuthError('Permissions not Included',401)
-    # check if permission is in the payload permissions array
-    if permission not in payload['permissions']:
-        raise AuthError('Permissions not Included')
-    # return true if these checks do not raise AuthError
-    return True
-
+    # check if 'permissions' in payload and permission in payload['permissions']
+    # if 'permissions' not in payload: 
+    #     abort(403)
+    # if permission not in payload['permissions']:
+    #     abort(403)
+    # else:
+    #     # return true if these checks do not raise AuthError
+    #     return True
+    if permission in payload['permissions']:
+        return True
+    else:
+        abort(403)
 
 '''
 @TODO implement verify_decode_jwt(token) method

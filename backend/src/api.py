@@ -101,7 +101,7 @@ def post_drinks(token):
     # get the request
     request_body = request.get_json() # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to remind myself how to get the request data
     # check if body is none
-    if request_body is None:
+    if request_body is None or request_body == '':
         abort(404)
     else:
         # retreive the title and the recipe
@@ -242,6 +242,14 @@ def no_credentials(error):
         'error': 401,
         'message': "no credentials"
     }), 401
+
+@app.errorhandler(403)
+def no_permission(error):
+    return jsonify({
+        'success': False,
+        'error': 403,
+        'message': 'permission not included'
+    }), 403
 '''
 @COMPLETE implement error handler for 404
     error handler should conform to general task above
