@@ -19,7 +19,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -144,23 +144,27 @@ def patch_drinks(token, id):
     request_body = request.get_json() # 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the request body
     # check to make sure the drink id is in the table
     # and the body has content
-    if drink is None or request_body is None:
+    if drink is None:
         abort(404)
-    else:
+    if request_body is not None:
         # get the new title
         new_title = request_body.get("title") # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder from 'API Development and Documentation' module to get the title from the body
         # get the new recipe
         new_recipe = json.dumps(request_body.get("recipe")) # 7/31/22 # Vinicius recommedned this code to another user #https://knowledge.udacity.com/questions/510654
         # update the title
-        drink.title = new_title
+        if new_title is not None:
+            drink.title = new_title
         # update the recipe
-        drink.recipe = new_recipe
+        if new_recipe is not None:
+            drink.recipe = new_recipe
         # make the update
         drink.update()
+        # get the updated record
+        drink_updated = Drink.query.get(id)
         # return the success
         return jsonify({
             'success': True,
-            'drink': drink.long()
+            'drinks': [drink_updated.long()]
         })
 
 
@@ -231,7 +235,13 @@ def not_found(error):
         'message': 'resource not found'
     }), 404
 
-
+@app.errorhandler(401)
+def no_credentials(error):
+    return jsonify({
+        'success': False,
+        'error': 401,
+        'message': "no credentials"
+    }), 401
 '''
 @COMPLETE implement error handler for 404
     error handler should conform to general task above

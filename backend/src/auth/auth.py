@@ -42,7 +42,7 @@ def get_token_auth_header():
     # if the header is empty, raise the exception
     # else split the string into bearer and toke vars
     if request_header is None:
-        raise Exception('Not Implemented')
+        raise AuthError('No Credentials',401)
     else:
         bearer = request_header.split(' ')[0]
         token = request_header.split(' ')[1]
@@ -68,10 +68,10 @@ def get_token_auth_header():
 def check_permissions(permission, payload):
     # check if 'permissions in payload
     if 'permissions' not in payload:
-        raise AuthError
+        raise AuthError('Permissions not Included',401)
     # check if permission is in the payload permissions array
     if permission not in payload['permissions']:
-        raise AuthError
+        raise AuthError('Permissions not Included')
     # return true if these checks do not raise AuthError
     return True
 
