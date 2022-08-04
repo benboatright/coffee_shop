@@ -32,7 +32,7 @@ class AuthError(Exception):
         it should raise an AuthError if the header is malformed
     return the token part of the header
 '''
-# 7/26/22 #used the video/code from the lesson '13. Sending Tokens'
+# 7/26/22 #referenced the video/code from the lesson '13. Sending Tokens' to build this method
 # https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/d266ef96-8da1-4dc0-b5b1-d6c3e4af9923/concepts/c9957a38-a6eb-40e0-addc-c794f2023ffb
 
 
@@ -45,7 +45,9 @@ def get_token_auth_header():
     else:
         # assign the bearer authorization header
         request_header = request.headers['Authorization']
+        # assign the name to a variable
         bearer = request_header.split(' ')[0]
+        # assign the token to a variable
         token = request_header.split(' ')[1]
     return token
 
@@ -61,20 +63,12 @@ def get_token_auth_header():
     string is not in the payload permissions array
     return true otherwise
 '''
-# 7/31/22 #used the video and code from the
+# 7/31/22 #referenced the video and code from the
 # '4. Using RBAC in Flask' lesson to develop this method
 # #https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/1e1c8e9d-61af-4a0a-b7d5-87e5becf9be7/concepts/b4d79d5c-3d79-43e6-93ca-0d750043a373
 
 
 def check_permissions(permission, payload):
-    # check if 'permissions' in payload and permission in payload['permissions']
-    # if 'permissions' not in payload: 
-    #     abort(403)
-    # if permission not in payload['permissions']:
-    #     abort(403)
-    # else:
-    #     # return true if these checks do not raise AuthError
-    #     return True
     if permission in payload['permissions']:
         return True
     else:
@@ -94,7 +88,7 @@ def check_permissions(permission, payload):
     !!NOTE urlopen has a common certificate error described here:
     #https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
 '''
-# 7/31/22 #used and studied the code/graffiti voice overs from the
+# 7/31/22 #referenced the code/graffiti voice overs from the
 # '10. Practice - Validating Auth0 Tokens' lesson to build this method
 # https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/d266ef96-8da1-4dc0-b5b1-d6c3e4af9923/concepts/ae26e42d-e380-4400-ae3f-c6d2ef65ef71
 
@@ -128,7 +122,7 @@ def verify_decode_jwt(token):
                          issuer="https://" + AUTH0_DOMAIN + "/")
 
     if payload is None:
-        abort(403)
+        abort(401)
     else:
         return payload
 

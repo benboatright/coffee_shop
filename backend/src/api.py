@@ -248,7 +248,7 @@ def no_permission(error):
     return jsonify({
         'success': False,
         'error': 403,
-        'message': 'permission not included'
+        'message': 'permission not included or not valid'
     }), 403
 '''
 @COMPLETE implement error handler for 404
