@@ -284,6 +284,6 @@ def no_permission(error):
 
 
 '''
-@TODO implement error handler for AuthError
+@COMPLETE implement error handler for AuthError
     error handler should conform to general task above
 '''
