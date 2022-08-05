@@ -256,7 +256,7 @@ def unprocessable(error):
                     "message": "resource not found"
                     }), 404
 '''
-# I followed the code above
+# I followed the code above for the error handlers below
 
 
 @app.errorhandler(404)

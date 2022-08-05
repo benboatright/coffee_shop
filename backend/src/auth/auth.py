@@ -39,7 +39,8 @@ class AuthError(Exception):
 
 def get_token_auth_header():
     # If the 'Authorization' not in the request, abort 401
-    # Video from '15. Practice - Applying Skills in Flask' min 3:35
+    # 8/3/22 #Referenced the code in the Video from
+    # '15. Practice - Applying Skills in Flask' min 3:35
     # https://learn.udacity.com/nanodegrees/nd0044/parts/cd0039/lessons/d266ef96-8da1-4dc0-b5b1-d6c3e4af9923/concepts/bb611ecd-2693-4556-a970-48128dba5c24
     if 'Authorization' not in request.headers:
         abort(401)
