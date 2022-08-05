@@ -35,6 +35,7 @@ db_drop_and_create_all()
 # #https://flask.palletsprojects.com/en/2.1.x/quickstart/
 # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter folder
 # from 'API Development and Documentation' module
+# https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
 
 
 @app.route('/drinks', methods=['GET'])
@@ -47,8 +48,9 @@ def get_drinks():
         return jsonify({
             'success': True,
             # 7/20/22 #followed Caryn's __init__.py file in 6_Final_Starter
+            # https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
             # folder from 'API Development and Documentation' module to get the
-            # drinks to display
+            # drinks to display using list comprehension
             'drinks': [drink.short() for drink in drinks]
         })
     # if there are no drinks, abort 404
@@ -81,6 +83,7 @@ def get_drinks_detail(token):
         return jsonify({
             'success': True,
             # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter
+            # https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
             # folder from 'API Development and Documentation' module to get the
             # drinks to display using list comprehension
             'drinks': [drink.long() for drink in drinks]
@@ -108,22 +111,26 @@ def get_drinks_detail(token):
 def post_drinks(token):
     # get the request
     # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder
+    # https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
     # from 'API Development and Documentation' module to remind myself how to
     # get the request data
     request_body = request.get_json()
     # check if body is none
-    if request_body is None or request_body == '':
+    if request_body is None:
         abort(404)
     else:
         # retreive the title and the recipe
         # 7/31/22 # followed Caryn's init__.py file in 6_Final_Starter folder
+        # https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
         # from 'API Development and Documentaion' module to extract the title
         # from the request body
         new_title = request_body.get("title")
         # 7/31/22 ##I tried using body.get(" ") method from Caryn's
         #  __init__.py file in 6_Final_Starter folder from
+        # https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
         # 'API Development and Documentation' module but kept
-        # getting error. Vinicius recommedned this code to another user
+        # getting error. Vinicius recommedned the
+        # json.dumps() code to another user
         # #https://knowledge.udacity.com/questions/510654
         new_recipe = json.dumps(request_body.get("recipe"))
         # create a new instance
@@ -158,6 +165,7 @@ def patch_drinks(token, id):
     drink = Drink.query.get(id)
     # retreive the body from the request
     # 7/31/22 #followed Caryn's __init__.py file in 6_Final_Starter folder
+    # https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
     # from 'API Development and Documentation' module to get the request body
     request_body = request.get_json()
     # check to make sure the drink id is in the table
@@ -167,6 +175,7 @@ def patch_drinks(token, id):
     if request_body is not None:
         # get the new title
         # 7/31/22 # followed Caryn's __init__.py file in 6_Final_Starter folder
+        # https://github.com/udacity/cd0037-API-Development-and-Documentation-exercises/blob/master/6_Final_Starter/backend/flaskr/__init__.py
         # from 'API Development and Documentation' module to get the title from
         # the body
         new_title = request_body.get("title")

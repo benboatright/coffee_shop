@@ -70,8 +70,10 @@ def get_token_auth_header():
 
 
 def check_permissions(permission, payload):
+    # check if the permission is in the payload
     if permission in payload['permissions']:
         return True
+    # else abort 403
     else:
         abort(403)
 
@@ -104,6 +106,7 @@ def verify_decode_jwt(token):
     # get the jwt token that needs to be verified
     header = jwt.get_unverified_header(token)
 
+    # initialize the dictionary
     rsa = {}
     # for loop to build the rsa key
     for val in jwks['keys']:
@@ -122,9 +125,10 @@ def verify_decode_jwt(token):
                          algorithms=ALGORITHMS,
                          audience=API_AUDIENCE,
                          issuer="https://" + AUTH0_DOMAIN + "/")
-
+    # if payload is none, abort 401
     if payload is None:
-        abort(403)
+        abort(401)
+    # return the payload
     else:
         return payload
 
