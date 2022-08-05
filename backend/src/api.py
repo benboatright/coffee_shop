@@ -296,3 +296,10 @@ def no_permission(error):
 @COMPLETE implement error handler for AuthError
     error handler should conform to general task above
 '''
+# 8/5/22 #reviewer recommended adding 
+# the following code that I adjusted
+@app.errorhandler(AuthError)
+def auth_error(error):
+    response = jsonify(error.error)
+    response.status_code = error.status_code
+    return response
